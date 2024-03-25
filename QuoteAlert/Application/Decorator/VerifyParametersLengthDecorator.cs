@@ -3,11 +3,11 @@ using System;
 
 namespace StockQuoteAlert.Application.Decorator
 {
-    public class VerifierParametersLengthDecorator : VerifierDecorator
+    public class VerifyParametersLengthDecorator : VerifyDecorator
     {
         private const int PARAMS_LENGTH = 3;
 
-        public VerifierParametersLengthDecorator(IVerifier verifier) : base(verifier)
+        public VerifyParametersLengthDecorator(IVerifier verifier) : base(verifier)
         {
         }
 
@@ -15,7 +15,7 @@ namespace StockQuoteAlert.Application.Decorator
         {
             if (args.Length != PARAMS_LENGTH)
             {
-                Console.WriteLine("Uso incorreto. Você deve inserir o Ticker e os valores de referência.");
+                Console.WriteLine("Uso incorreto. Você deve inserir o Ticker e dois valores de referência.");
                 Console.WriteLine("Exemplo: QuoteAlert.exe PETR4 22.67 22.59");
                 return false;
             }

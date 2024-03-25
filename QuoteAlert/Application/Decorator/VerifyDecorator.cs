@@ -2,11 +2,11 @@
 
 namespace StockQuoteAlert.Application.Decorator
 {
-    public abstract class VerifierDecorator : IVerifier
+    public abstract class VerifyDecorator : IVerifier
     {
         private readonly IVerifier _verifier;
 
-        public VerifierDecorator(IVerifier verifier)
+        public VerifyDecorator(IVerifier verifier)
         {
             _verifier = verifier;
         }

@@ -10,15 +10,21 @@ namespace StockQuoteAlert.Infrastructure.APIRequest
     {
         private readonly HttpClient _httpClient;
 
-        private readonly string apiKey = System.Configuration.ConfigurationManager.AppSettings.Get("ApiKey");
-        private readonly string interval = System.Configuration.ConfigurationManager.AppSettings.Get("Interval");
-        private readonly string modules = System.Configuration.ConfigurationManager.AppSettings.Get("Modules");
-        private readonly string range = System.Configuration.ConfigurationManager.AppSettings.Get("Range");
-        private readonly string baseUrl= System.Configuration.ConfigurationManager.AppSettings.Get("BaseUrl");
+        private readonly string apiKey;
+        private readonly string interval;
+        private readonly string modules;
+        private readonly string range;
+        private readonly string baseUrl;
 
         public StockQuoteAPIRequest(HttpClient httpClient)
         {
             _httpClient = httpClient;
+
+            apiKey = System.Configuration.ConfigurationManager.AppSettings.Get("ApiKey");
+            interval = System.Configuration.ConfigurationManager.AppSettings.Get("Interval");
+            modules = System.Configuration.ConfigurationManager.AppSettings.Get("Modules");
+            range = System.Configuration.ConfigurationManager.AppSettings.Get("Range");
+            baseUrl = System.Configuration.ConfigurationManager.AppSettings.Get("BaseUrl");
         }
 
         public async Task<Stock> GetStock(string symbol)
@@ -31,14 +37,13 @@ namespace StockQuoteAlert.Infrastructure.APIRequest
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception($"Aconteceu um problema. {response.StatusCode}");
+                    throw new Exception($"Houve um problema com a requisição: {response.ReasonPhrase})");
                 }
 
                 string jsonResponse = await response.Content.ReadAsStringAsync();
                 var jsonData = JsonSerializer.Deserialize<StockQuoteResponse>(jsonResponse);
 
                 return JsonSerializer.Deserialize<Stock>(jsonData.Results[0]);
-
             }
             catch (Exception ex)
             {

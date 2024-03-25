@@ -1,12 +1,17 @@
-﻿using StockQuoteAlert.Domain.Interfaces;
+﻿using StockQuoteAlert.Application.Decorator;
+using StockQuoteAlert.Domain.Interfaces;
 using System;
 using System.Globalization;
 
-namespace StockQuoteAlert.Application
+namespace QuoteAlert.Application.Decorator
 {
-    public class Verifier : IVerifier
+    public class VerifyNumericNumbersDecorator : VerifyDecorator
     {
-        public bool Verify(string[] args)
+        public VerifyNumericNumbersDecorator(IVerifier verifier) : base(verifier)
+        {
+        }
+
+        public override bool Verify(string[] args)
         {
             if (!(double.TryParse(args[1], NumberStyles.Any, CultureInfo.InvariantCulture, out double targetHigh) &&
                 double.TryParse(args[2], NumberStyles.Any, CultureInfo.InvariantCulture, out double targetLow)))
@@ -15,7 +20,7 @@ namespace StockQuoteAlert.Application
                 return false;
             }
 
-            return true;
+            return base.Verify(args);
         }
     }
 }

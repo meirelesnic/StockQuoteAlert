@@ -4,9 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace StockQuoteAlert.Application.Decorator
 {
-    public class VerifierSpecialCharacterDecorator : VerifierDecorator
+    public class VerifySpecialCharacterDecorator : VerifyDecorator
     {
-        public VerifierSpecialCharacterDecorator(IVerifier verifier) : base(verifier)
+        public VerifySpecialCharacterDecorator(IVerifier verifier) : base(verifier)
         {
         }
 
@@ -17,7 +17,7 @@ namespace StockQuoteAlert.Application.Decorator
 
             if (!regex.IsMatch(symbol))
             {
-                Console.WriteLine("O Ticker não possui caracteres especiais.");
+                Console.WriteLine("O Ticker não pode possuir caracteres especiais.");
                 return false;
             }
 

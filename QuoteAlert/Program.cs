@@ -1,6 +1,11 @@
-﻿using StockQuoteAlert.Application;
+﻿using Microsoft.Extensions.DependencyInjection;
+using QuoteAlert.Application.Decorator;
+using StockQuoteAlert.Application;
 using StockQuoteAlert.Application.Decorator;
+using StockQuoteAlert.Application.Service;
 using StockQuoteAlert.Domain.Interfaces;
+using StockQuoteAlert.Infrastructure.APIRequest;
+using StockQuoteAlert.Infrastructure.Config;
 using System;
 using System.Globalization;
 using System.Net.Http;
@@ -8,22 +13,27 @@ using System.Threading;
 
 namespace QuoteAlert
 {
-    internal class Program
+    public class Program
     {
         static void Main(string[] args)
         {
-            //double targetHigh = 60;
-            //double targetLow = 50;
-            //var symbol = "EGIE3";
+            var serviceProvider = new ServiceCollection()
+            .AddTransient<StockQuoteMonitoring>()
+            .AddTransient<HttpClient>()
+            .AddTransient(service =>
+            {
+                return EmailConfig.EmailConfigSMTP();
+            })
+            .AddTransient<StockQuoteAPIRequest>()
+            .AddTransient<ISendEmail, SendEmailAlertService>()
+            .AddTransient<IGetStockTransactionAnalysis, StockQuoteAnalyzedService>()
+            .BuildServiceProvider();
 
-            // string[] teste = { null, "PETR4", "20", "3" };
+            IVerifier verifier = new VerifyInput();
 
-            HttpClient httpClient = new HttpClient();
-
-            IVerifier verifier = new Verifier();
-
-            IVerifier verifierDecorator = new VerifierParametersLengthDecorator(
-                                                new VerifierSpecialCharacterDecorator(verifier));
+            IVerifier verifierDecorator = new VerifyParametersLengthDecorator(
+                                                new VerifySpecialCharacterDecorator(
+                                                    new VerifyNumericNumbersDecorator(verifier)));
 
             if (verifierDecorator.Verify(args))
             {
@@ -31,11 +41,11 @@ namespace QuoteAlert
                 Double.TryParse(args[1], NumberStyles.Any, CultureInfo.InvariantCulture, out double targetHigh);
                 Double.TryParse(args[2], NumberStyles.Any, CultureInfo.InvariantCulture, out double targetLow);
 
-                var sendEmail = new StockQuoteMonitoring(httpClient);
+                var stockQuoteMonitoring = serviceProvider.GetService<StockQuoteMonitoring>();
 
                 while (true)
                 {
-                    sendEmail.StartMonitoring(targetHigh, targetLow, symbol);
+                    stockQuoteMonitoring.StartMonitoring(targetHigh, targetLow, symbol);
                     Thread.Sleep(1000);
                 }
             }
