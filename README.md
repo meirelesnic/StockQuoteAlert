@@ -1,3 +1,6 @@
+Aplicação Console que realiza o monitoramento da cotação de qualquer ativo da B3 escolhido: se a cotação subir acima de um determinado nível ou descer acima de outro,
+um email será enviado aconselhando a compra ou a venda, dependendo do resultado.
+
 Primeiramente, é necessário fazer as alterações dos valores do arquivo de configuração, App.config.
 
   1) Para as configurações da API, é necessário entrar no site https://brapi.dev/dashboard e criar um novo token para inserir no campo "AkiKey".
@@ -25,4 +28,4 @@ Para executar a aplicação através da linha de comando, é necessário compil�
 
 Agora, já é possível executar a aplicação pela linha de comando, passando o Ticker e os valores de referência como no exemplo:
 
-                                        QuoteAlert.exe PETR4 22.67 22.59
+QuoteAlert.exe PETR4 22.67 22.59
